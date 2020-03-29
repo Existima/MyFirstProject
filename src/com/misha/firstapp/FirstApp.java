@@ -9,21 +9,23 @@ import java.util.Scanner;
 
 import static com.misha.firstapp.model.UserType.ADMIN;
 import static com.misha.firstapp.model.UserType.WARIENICHEK;
+import static com.misha.firstapp.security.UserRepo.USER_REPO;
 
 public class FirstApp {
-    private static UserRepo userRepo = UserRepo.getUserRepo();
+    private static UserRepo userRepo = USER_REPO;
     private static AuthorizationService authorizationService = new AuthorizationService(userRepo);
     private static AdminMenu adminMenu = new AdminMenu(userRepo);
+
     public static void main(String[] args) {
+        if (userRepo.getUserByLogIn("lizka") == null) {
+            User admin = new User("liza", "lastname", "lizka", "1111", (byte) 2, (byte) 2, ADMIN);
+            userRepo.addUser(admin);
+        }
 
-        User admin = new User("liza", "lastname", "lizka", "1111", (byte) 2, (byte) 2, ADMIN);
-        User biba = new User("biba", "lastname", "biba", "1112", (byte) 2, (byte) 2, WARIENICHEK);
-
-
-//        System.out.println("\n firstName:" + admin.getFirstName() + "\n last name:" + admin.getLastName() + "\n age: "
-//                + admin.getAge() + "\n hands count:" + admin.getHandsCount() + "\n login: " + admin.getLogIn()
-//                + "\n password: " + admin.getPassword() );
-        userRepo.addUser(admin);
+        if (userRepo.getUserByLogIn("biba") == null) {
+            User biba = new User("biba", "lastname", "biba", "1112", (byte) 2, (byte) 2, WARIENICHEK);
+            userRepo.addUser(biba);
+        }
 
         System.out.println("login");
         Scanner ssscanner = new Scanner(System.in);
@@ -36,7 +38,7 @@ public class FirstApp {
             System.out.println("Oshybka autoricacii");
         } else {
             System.out.println("Welcome dear, " + authorizedUser.getFirstName());
-            if(authorizedUser.getUserType()==ADMIN){
+            if (authorizedUser.getUserType() == ADMIN) {
                 adminMenu.showMenu();
                 String option = ssscanner.nextLine();
                 adminMenu.showSubMenu(option);
@@ -45,15 +47,6 @@ public class FirstApp {
 
 
     }
-
-    // Object adminObject = admin;
-
-    // System.out.println("admin is of type" + adminObject.getClass());
-    //System.out.println("admin is of type user" + (adminObject instanceof User));
-    //System.out.println("admin is of type object" + (adminObject instanceof Object));
-    //System.out.println("admin is of type integer" + (adminObject instanceof Integer));
-    //System.out.println("admin is adminObject: " + adminObject.equals(admin));
-    //System.out.println("" + admin);
 }
 
 

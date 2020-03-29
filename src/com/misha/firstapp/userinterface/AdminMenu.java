@@ -21,6 +21,7 @@ public class AdminMenu {
         System.out.println("2) Find user option");
         System.out.println("3) Update user ");
         System.out.println("4) Delete user");
+        System.out.println("5) Show all users");
     }
 
     public void showSubMenu(String option) {
@@ -36,6 +37,16 @@ public class AdminMenu {
                 break;
             case "4":
                 deleteUser();
+                break;
+            case "5":
+                listAllUsers();
+                break;
+        }
+    }
+
+    private void listAllUsers() {
+        for (User userFromRepo : библиотекаНомер1.getAllUsers()) {
+            System.out.println(userFromRepo);
         }
     }
 

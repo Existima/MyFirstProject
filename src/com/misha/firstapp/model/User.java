@@ -103,14 +103,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", logIn='" + logIn + '\'' +
-                ", password='" + password + '\'' +
-                ", age=" + age +
-                ", handsCount=" + handsCount +
-                ", userType=" + userType +
-                '}';
+        return String.format("%s,%s,%s,%s,%s,%s,%s",firstName, lastName, logIn, password, age, handsCount, userType);
     }
 }
