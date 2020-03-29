@@ -6,17 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepo {
-    private static final UserRepo USER_REPO = new UserRepo();
+    private static final UserRepo USER_REPO = new UserRepo(new ArrayList<>());
 
-    private List<User> userList = new ArrayList();
+    private List<User> userList;
 
-    private UserRepo() {
-
+    private UserRepo(List<User> list) {
+        userList = list;
     }
 
 
-    public void addUser(User user) {
+    public User addUser(User user) {
         userList.add(user);
+        return user;
     }
 
     public User getUserByLogIn(String logIn) {
@@ -31,4 +32,8 @@ public class UserRepo {
     public static UserRepo getUserRepo() {
         return USER_REPO;
     }
-}
+
+    public boolean deleteUser(User пользовательFromRepo) {
+        return userList.remove(пользовательFromRepo);
+    }
+    }

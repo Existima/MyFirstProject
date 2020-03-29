@@ -1,19 +1,23 @@
 package com.misha.firstapp;
 
 import com.misha.firstapp.model.User;
-import com.misha.firstapp.model.UserType;
 import com.misha.firstapp.security.AuthorizationService;
 import com.misha.firstapp.security.UserRepo;
+import com.misha.firstapp.userinterface.AdminMenu;
 
 import java.util.Scanner;
+
+import static com.misha.firstapp.model.UserType.ADMIN;
+import static com.misha.firstapp.model.UserType.WARIENICHEK;
 
 public class FirstApp {
     private static UserRepo userRepo = UserRepo.getUserRepo();
     private static AuthorizationService authorizationService = new AuthorizationService(userRepo);
-
+    private static AdminMenu adminMenu = new AdminMenu(userRepo);
     public static void main(String[] args) {
 
-        User admin = new User("liza", "lastname", "lizka", "1111", (byte) 2, (byte) 2, UserType.ADMIN);
+        User admin = new User("liza", "lastname", "lizka", "1111", (byte) 2, (byte) 2, ADMIN);
+        User biba = new User("biba", "lastname", "biba", "1112", (byte) 2, (byte) 2, WARIENICHEK);
 
 
 //        System.out.println("\n firstName:" + admin.getFirstName() + "\n last name:" + admin.getLastName() + "\n age: "
@@ -32,6 +36,11 @@ public class FirstApp {
             System.out.println("Oshybka autoricacii");
         } else {
             System.out.println("Welcome dear, " + authorizedUser.getFirstName());
+            if(authorizedUser.getUserType()==ADMIN){
+                adminMenu.showMenu();
+                String option = ssscanner.nextLine();
+                adminMenu.showSubMenu(option);
+            }
         }
 
 
