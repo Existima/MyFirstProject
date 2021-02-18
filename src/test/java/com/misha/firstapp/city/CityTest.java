@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,7 +68,7 @@ public class CityTest {
     }
 
     @Test
-    public void addHousesTest(){
+    public void addHousesTest() {
         //given
         City city = new City();
         House house1 = new House("Mordor 1");
@@ -87,7 +86,27 @@ public class CityTest {
     }
 
     @Test
-    public void populatedHousesTest1(){
+    public void testLeastPopulatedHouse() {
+        //given
+        City city = new City();
+        House house1 = new House("Mordor 1");
+        House house2 = new House("Edoras 2");
+        city.addHouse(house1);
+        city.addHouse(house2);
+        house1.addInhabitant("Bilbo", 24);
+        house2.addInhabitant("Gendalf", 305);
+
+        //when
+        House leastPopulatedHouse = city.getLeastPopulatedHouse();
+
+        //then
+        assertEquals(house2, leastPopulatedHouse);
+    }
+
+
+
+    @Test
+    public void populatedHousesTest1() {
         //given
         City city = new City();
         House house1 = new House("Mordor 1");
@@ -115,7 +134,7 @@ public class CityTest {
     }
 
     @Test
-    public void populatedHousesTest2(){
+    public void populatedHousesTest2() {
         //given
         City city = new City();
         House house1 = new House("Anduin River 1");

@@ -26,20 +26,28 @@ public class City {
      * then move to the next until Z
      * Remember that max inhabitants count is limited to 3
      */
-    public void populateHouses(){
+    public void populateHouses() {
         //todo
     }
 
-    public void addHouse(House house){
+    public void addHouse(House house) {
         //todo
     }
 
     /**
      * resulted set must return houses in its address alphabetical order
+     *
      * @return
      */
     public Set<House> getHouses() {
         return null;//todo
+    }
+
+    /**
+     * This method must return first least populated house in the city, first means first in alphabetical order
+     */
+    public House getLeastPopulatedHouse(){
+        return null; //todo
     }
 
     /**

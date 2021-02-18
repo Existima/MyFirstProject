@@ -13,7 +13,7 @@ public class House {
         this.inhabitants = new HashMap<>();
     }
 
-    private void addInhabitant(String name, int age) {
+    public void addInhabitant(String name, int age) {
         if(inhabitants.size() < 3){
             inhabitants.put(name, age);
         }else {
