@@ -17,7 +17,7 @@ public class CityTest {
         testCity.addCitizen("Frodo", 3);
 
         //when
-        int citizenCount = testCity.getCitizensCount();
+        int citizenCount = testCity.citizensCount();
 
         //then
         assertEquals(3, citizenCount);
