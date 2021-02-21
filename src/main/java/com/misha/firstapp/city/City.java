@@ -1,21 +1,17 @@
 package com.misha.firstapp.city;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class City {
 
     /**
      * Citizens of a city, key is the name, value is age
      */
-    private Map<String, Integer> citizens = new HashMap<>();
+    private List<Citizen> citizens = new LinkedList<>();
     private List<House> houses = new LinkedList<>();
 
-    public void addCitizen(String name, int age) {
-        citizens.put(name, age);
+    public void addCitizen(Citizen citizen) {
+        citizens.add(citizen);
     }
 
     /**
@@ -27,11 +23,25 @@ public class City {
      * Remember that max inhabitants count is limited to 3
      */
     public void populateHouses() {
-        //todo
+        Citizen child = null;
+        for (Citizen citizen : citizens) {
+            if (citizen.getAge() < Group.CHILDREN.maxAge && citizen.getAge() > Group.CHILDREN.minAge) {
+                child = citizen;
+            } else {
+                House childHouse = getLeastPopulatedHouse();
+                if (child != null) {
+                    childHouse.addInhabitant(child);
+                }
+                child = null;
+                childHouse.addInhabitant(citizen);
+            }
+
+        }
+
     }
 
     public void addHouse(House house) {
-        //todo
+        houses.add(house);
     }
 
     /**
@@ -39,15 +49,46 @@ public class City {
      *
      * @return
      */
+
     public Set<House> getHouses() {
-        return null;//todo
+        return new TreeSet<>(houses);
     }
+
 
     /**
      * This method must return first least populated house in the city, first means first in alphabetical order
      */
-    public House getLeastPopulatedHouse(){
-        return null; //todo
+    public House getLeastPopulatedHouse() {
+
+        House h = null;
+
+        for (House house : houses) {
+            if (h == null) {
+                h = house;
+            } else {
+                int popResult = h.getInhabitants().size() - house.getInhabitants().size();
+                if (popResult == 0) {
+                    int alfResult = h.compareTo(house);
+                    if (alfResult > 0) {
+                        h = house;
+                    }
+                } else if (popResult > 0) {
+                    h = house;
+                }
+            }
+        }
+        return h;
+
+//        return houses.stream().
+//                min((house1, house2) -> {
+//                    int newResult = house1.getInhabitants().size() - house2.getInhabitants().size();
+//                    if (newResult == 0) {
+//                        return house1.compareTo(house2);
+//                    } else {
+//                        return newResult;
+//                    }
+//                }).
+//                get();
     }
 
     /**
@@ -64,8 +105,8 @@ public class City {
      *
      * @return the oldest citizen in the City in format where key is name, value is age
      */
-    public Map.Entry<String, Integer> getOldestCitizen() {
-        return citizens.entrySet().stream().max(Map.Entry.comparingByValue()).get();
+    public Citizen getOldestCitizen() {
+        return citizens.stream().max(Comparator.comparing(Citizen::getAge)).get();
     }
 
     /**
@@ -76,32 +117,32 @@ public class City {
      *
      * @return returns Map of citizens
      */
-    public Map<Group, Map<String, Integer>> getAgeGroups() {
-        Map<Group, Map<String, Integer>> result = new HashMap<>();
-        for (Map.Entry<String, Integer> citizen : citizens.entrySet()) {
-            if (citizen.getValue() < 18) {
+    public Map<Group, List<Citizen>> getAgeGroups() {
+        Map<Group, List<Citizen>> result = new HashMap<>();
+        for (Citizen citizen : citizens) {
+            if (citizen.getAge() < 18) {
                 if (result.containsKey(Group.CHILDREN)) {
-                    result.get(Group.CHILDREN).put(citizen.getKey(), citizen.getValue());
+                    result.get(Group.CHILDREN).add(citizen);
                 } else {
-                    Map<String, Integer> hashMap = new HashMap<>();
-                    hashMap.put(citizen.getKey(), citizen.getValue());
-                    result.put(Group.CHILDREN, hashMap);
+                    List<Citizen> list = new LinkedList<>();
+                    list.add(citizen);
+                    result.put(Group.CHILDREN, list);
                 }
-            } else if (citizen.getValue() < 66) {
+            } else if (citizen.getAge() < 66) {
                 if (result.containsKey(Group.ADULTS)) {
-                    result.get(Group.ADULTS).put(citizen.getKey(), citizen.getValue());
+                    result.get(Group.ADULTS).add(citizen);
                 } else {
-                    Map<String, Integer> hashMap = new HashMap<>();
-                    hashMap.put(citizen.getKey(), citizen.getValue());
-                    result.put(Group.ADULTS, hashMap);
+                    List<Citizen> list = new LinkedList<>();
+                    list.add(citizen);
+                    result.put(Group.ADULTS, list);
                 }
             } else {
                 if (result.containsKey(Group.RETIREES)) {
-                    result.get(Group.RETIREES).put(citizen.getKey(), citizen.getValue());
+                    result.get(Group.RETIREES).add(citizen);
                 } else {
-                    Map<String, Integer> hashMap = new HashMap<>();
-                    hashMap.put(citizen.getKey(), citizen.getValue());
-                    result.put(Group.RETIREES, hashMap);
+                    List<Citizen> list = new LinkedList<>();
+                    list.add(citizen);
+                    result.put(Group.RETIREES, list);
                 }
             }
         }
@@ -119,6 +160,14 @@ public class City {
         Group(int minAge, int maxAge) {
             this.minAge = minAge;
             this.maxAge = maxAge;
+        }
+
+        public int getMinAge() {
+            return minAge;
+        }
+
+        public int getMaxAge() {
+            return maxAge;
         }
     }
 }

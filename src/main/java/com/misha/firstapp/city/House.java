@@ -1,27 +1,29 @@
 package com.misha.firstapp.city;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-public class House {
+public class House implements Comparable<House> {
     private final String address;
-    private final Map<String, Integer> inhabitants;
+    private final List<Citizen> inhabitants;
 
     public House(String address) {
         this.address = address;
-        this.inhabitants = new HashMap<>();
+        this.inhabitants = new LinkedList<>();
     }
 
-    public void addInhabitant(String name, int age) {
-        if(inhabitants.size() < 3){
-            inhabitants.put(name, age);
+    public String getAddress() {
+        return address;
+    }
+
+    public void addInhabitant(Citizen citizen) {
+        if(inhabitants.size() < 4){
+            inhabitants.add(citizen);
         }else {
             throw new RuntimeException("Max inhabitants count in this house is reached");
         }
     }
 
-    public Map<String, Integer> getInhabitants() {
+    public List<Citizen> getInhabitants() {
         return inhabitants;
     }
 
@@ -49,5 +51,10 @@ public class House {
                 "address='" + address + '\'' +
                 ", inhabitants=" + inhabitants +
                 '}';
+    }
+
+    @Override
+    public int compareTo(House o) {
+       return this.getAddress().compareTo(o.getAddress());
     }
 }

@@ -3,6 +3,7 @@ package com.misha.firstapp.city;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,9 +14,13 @@ public class CityTest {
     public void citizenCountTest() {
         //given
         City testCity = new City();
-        testCity.addCitizen("Bilbo", 24);
-        testCity.addCitizen("Gendalf", 305);
-        testCity.addCitizen("Frodo", 3);
+        Citizen bilbo = new Citizen("Bilbo", 24);
+        Citizen gendalf = new Citizen("Gendalf", 305);
+        Citizen frodo = new Citizen("Frodo", 3);
+
+        testCity.addCitizen(bilbo);
+        testCity.addCitizen(gendalf);
+        testCity.addCitizen(frodo);
 
         //when
         int citizenCount = testCity.getCitizensCount();
@@ -28,30 +33,40 @@ public class CityTest {
     public void oldestCitizenTest() {
         //given
         City testCity = new City();
-        testCity.addCitizen("Bilbo", 24);
-        testCity.addCitizen("Gendalf", 305);
-        testCity.addCitizen("Frodo", 3);
+        Citizen bilbo = new Citizen("Bilbo", 24);
+        Citizen gendalf = new Citizen("Gendalf", 305);
+        Citizen frodo = new Citizen("Frodo", 3);
+
+        testCity.addCitizen(bilbo);
+        testCity.addCitizen(gendalf);
+        testCity.addCitizen(frodo);
 
         //when
-        Map.Entry<String, Integer> citizen = testCity.getOldestCitizen();
+        Citizen citizen = testCity.getOldestCitizen();
 
         //then
-        assertEquals("Gendalf", citizen.getKey());
-        assertEquals(305, citizen.getValue());
+        assertEquals("Gendalf", citizen.getName());
+        assertEquals(305, citizen.getAge());
     }
 
     @Test
     public void getAgeGroupsTest() {
         //given
+        Citizen bilbo = new Citizen("Bilbo", 24);
+        Citizen gendalf = new Citizen("Gendalf", 305);
+        Citizen arven = new Citizen("Arven", 295);
+        Citizen frodo = new Citizen("Frodo", 3);
+        Citizen aragorn = new Citizen("Aragorn", 45);
+
         City testCity = new City();
-        testCity.addCitizen("Bilbo", 24);
-        testCity.addCitizen("Gendalf", 305);
-        testCity.addCitizen("Arven", 295);
-        testCity.addCitizen("Frodo", 3);
-        testCity.addCitizen("Aragorn", 45);
+        testCity.addCitizen(bilbo);
+        testCity.addCitizen(gendalf);
+        testCity.addCitizen(arven);
+        testCity.addCitizen(frodo);
+        testCity.addCitizen(aragorn);
 
         //when
-        Map<City.Group, Map<String, Integer>> groups = testCity.getAgeGroups();
+        Map<City.Group, List<Citizen>> groups = testCity.getAgeGroups();
 
         //then
         assertEquals(3, groups.size());
@@ -60,11 +75,11 @@ public class CityTest {
         assertEquals(2, groups.get(City.Group.ADULTS).size());
         assertEquals(2, groups.get(City.Group.RETIREES).size());
 
-        assertTrue(groups.get(City.Group.CHILDREN).containsKey("Frodo"));
-        assertTrue(groups.get(City.Group.ADULTS).containsKey("Bilbo"));
-        assertTrue(groups.get(City.Group.ADULTS).containsKey("Aragorn"));
-        assertTrue(groups.get(City.Group.RETIREES).containsKey("Gendalf"));
-        assertTrue(groups.get(City.Group.RETIREES).containsKey("Arven"));
+        assertTrue(groups.get(City.Group.CHILDREN).contains(frodo));
+        assertTrue(groups.get(City.Group.ADULTS).contains(bilbo));
+        assertTrue(groups.get(City.Group.ADULTS).contains(aragorn));
+        assertTrue(groups.get(City.Group.RETIREES).contains(gendalf));
+        assertTrue(groups.get(City.Group.RETIREES).contains(arven));
     }
 
     @Test
@@ -86,6 +101,41 @@ public class CityTest {
     }
 
     @Test
+    public void compareHouseTest(){
+        //given
+        House house1 = new House("Mordor 1");
+        House house2 = new House("Edoras 2");
+
+        //when
+        int result = house1.compareTo(house2);
+
+        //then
+        assertTrue(result>0);
+    }
+
+
+    @Test
+    public void testLeastPopulatedHouseEqual() {
+        //given
+        City city = new City();
+        House house1 = new House("Mordor 1");
+        House house2 = new House("Edoras 2");
+        city.addHouse(house1);
+        city.addHouse(house2);
+        Citizen bilbo = new Citizen("Bilbo", 24);
+        Citizen gendalf = new Citizen("Gendalf", 305);
+
+        house1.addInhabitant(bilbo);
+        house2.addInhabitant(gendalf);
+
+        //when
+        House leastPopulatedHouse = city.getLeastPopulatedHouse();
+
+        //then
+        assertEquals(house2, leastPopulatedHouse);
+    }
+
+    @Test
     public void testLeastPopulatedHouse() {
         //given
         City city = new City();
@@ -93,14 +143,19 @@ public class CityTest {
         House house2 = new House("Edoras 2");
         city.addHouse(house1);
         city.addHouse(house2);
-        house1.addInhabitant("Bilbo", 24);
-        house2.addInhabitant("Gendalf", 305);
+        Citizen bilbo = new Citizen("Bilbo", 24);
+        Citizen gendalf = new Citizen("Gendalf", 305);
+        Citizen arven = new Citizen("Arven", 295);
+
+        house1.addInhabitant(bilbo);
+        house2.addInhabitant(gendalf);
+        house2.addInhabitant(arven);
 
         //when
         House leastPopulatedHouse = city.getLeastPopulatedHouse();
 
         //then
-        assertEquals(house2, leastPopulatedHouse);
+        assertEquals(house1, leastPopulatedHouse);
     }
 
 
@@ -115,11 +170,17 @@ public class CityTest {
         city.addHouse(house1);
         city.addHouse(house2);
 
-        city.addCitizen("Frodo", 3);
-        city.addCitizen("Bilbo", 24);
-        city.addCitizen("Gendalf", 305);
-        city.addCitizen("Arven", 295);
-        city.addCitizen("Aragorn", 45);
+        Citizen bilbo = new Citizen("Bilbo", 24);
+        Citizen gendalf = new Citizen("Gendalf", 305);
+        Citizen arven = new Citizen("Arven", 295);
+        Citizen frodo = new Citizen("Frodo", 3);
+        Citizen aragorn = new Citizen("Aragorn", 45);
+
+        city.addCitizen(bilbo);
+        city.addCitizen(gendalf);
+        city.addCitizen(arven);
+        city.addCitizen(frodo);
+        city.addCitizen(aragorn);
 
         //when
         city.populateHouses();
@@ -129,8 +190,8 @@ public class CityTest {
 
         //then
         assertEquals(city.getCitizensCount(), inhabitantsSum);
-        assertEquals(3, house2.getInhabitants().size());
-        assertEquals(2, house1.getInhabitants().size());
+        assertEquals(2, house2.getInhabitants().size());
+        assertEquals(3, house1.getInhabitants().size());
     }
 
     @Test
@@ -145,12 +206,21 @@ public class CityTest {
 
         city.addHouse(house1);
         city.addHouse(house2);
+        city.addHouse(house3);
+        city.addHouse(house4);
+        city.addHouse(house5);
 
-        city.addCitizen("Frodo", 3);
-        city.addCitizen("Bilbo", 24);
-        city.addCitizen("Gendalf", 305);
-        city.addCitizen("Arven", 295);
-        city.addCitizen("Aragorn", 45);
+        Citizen bilbo = new Citizen("Bilbo", 24);
+        Citizen gendalf = new Citizen("Gendalf", 305);
+        Citizen arven = new Citizen("Arven", 295);
+        Citizen frodo = new Citizen("Frodo", 3);
+        Citizen aragorn = new Citizen("Aragorn", 45);
+
+        city.addCitizen(bilbo);
+        city.addCitizen(gendalf);
+        city.addCitizen(arven);
+        city.addCitizen(frodo);
+        city.addCitizen(aragorn);
 
         //when
         city.populateHouses();
@@ -160,10 +230,10 @@ public class CityTest {
 
         //then
         assertEquals(city.getCitizensCount(), inhabitantsSum);
-        assertEquals(2, house1.getInhabitants().size());
+        assertEquals(1, house1.getInhabitants().size());
         assertEquals(1, house2.getInhabitants().size());
         assertEquals(1, house3.getInhabitants().size());
-        assertEquals(1, house4.getInhabitants().size());
+        assertEquals(2, house4.getInhabitants().size());
         assertEquals(0, house5.getInhabitants().size());
     }
 }
