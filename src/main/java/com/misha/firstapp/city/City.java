@@ -21,6 +21,7 @@ public class City {
      * populate priority according to alphabetical address of the house, addresses starting from A populate first,
      * then move to the next until Z
      * Remember that max inhabitants count is limited to 3
+     * Make sure all children populated
      */
     public void populateHouses() {
         Citizen child = null;

@@ -236,4 +236,49 @@ public class CityTest {
         assertEquals(2, house4.getInhabitants().size());
         assertEquals(0, house5.getInhabitants().size());
     }
+
+    @Test
+    public void allChildrenPopulated3() {
+        //given
+        City city = new City();
+        House house1 = new House("Anduin River 1");
+        House house2 = new House("Dead Marshes 2");
+        House house3 = new House("Edoras 3");
+        House house4 = new House("Mines of Moria 4");
+        House house5 = new House("Mordor 5");
+
+        city.addHouse(house1);
+        city.addHouse(house2);
+        city.addHouse(house3);
+        city.addHouse(house4);
+        city.addHouse(house5);
+
+        Citizen bilbo = new Citizen("Bilbo", 24);
+        Citizen gendalf = new Citizen("Gendalf", 305);
+        Citizen arven = new Citizen("Arven", 295);
+        Citizen frodo = new Citizen("Frodo", 3);
+        Citizen pippin = new Citizen("Pippin", 1);
+        Citizen aragorn = new Citizen("Aragorn", 45);
+
+        city.addCitizen(bilbo);
+        city.addCitizen(gendalf);
+        city.addCitizen(arven);
+        city.addCitizen(frodo);
+        city.addCitizen(pippin);
+        city.addCitizen(aragorn);
+
+        //when
+        city.populateHouses();
+        int inhabitantsSum = city.getHouses().stream()
+                .map(house -> house.getInhabitants().size())
+                .mapToInt(Integer::intValue).sum();
+
+        //then
+        assertEquals(city.getCitizensCount(), inhabitantsSum);
+        assertEquals(2, house1.getInhabitants().size());
+        assertEquals(2, house2.getInhabitants().size());
+        assertEquals(1, house3.getInhabitants().size());
+        assertEquals(1, house4.getInhabitants().size());
+        assertEquals(0, house5.getInhabitants().size());
+    }
 }
