@@ -9,9 +9,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CityTest {
+class CityTest {
     @Test
-    public void citizenCountTest() {
+    void citizenCountTest() {
         //given
         City testCity = new City();
         Citizen bilbo = new Citizen("Bilbo", 24);
@@ -30,7 +30,7 @@ public class CityTest {
     }
 
     @Test
-    public void oldestCitizenTest() {
+    void oldestCitizenTest() {
         //given
         City testCity = new City();
         Citizen bilbo = new Citizen("Bilbo", 24);
@@ -50,7 +50,7 @@ public class CityTest {
     }
 
     @Test
-    public void getAgeGroupsTest() {
+    void getAgeGroupsTest() {
         //given
         Citizen bilbo = new Citizen("Bilbo", 24);
         Citizen gendalf = new Citizen("Gendalf", 305);
@@ -83,7 +83,7 @@ public class CityTest {
     }
 
     @Test
-    public void addHousesTest() {
+    void addHousesTest() {
         //given
         City city = new City();
         House house1 = new House("Mordor 1");
@@ -101,7 +101,7 @@ public class CityTest {
     }
 
     @Test
-    public void compareHouseTest(){
+    void compareHouseTest() {
         //given
         House house1 = new House("Mordor 1");
         House house2 = new House("Edoras 2");
@@ -110,12 +110,12 @@ public class CityTest {
         int result = house1.compareTo(house2);
 
         //then
-        assertTrue(result>0);
+        assertTrue(result > 0);
     }
 
 
     @Test
-    public void testLeastPopulatedHouseEqual() {
+    void testLeastPopulatedHouseEqual() {
         //given
         City city = new City();
         House house1 = new House("Mordor 1");
@@ -136,7 +136,7 @@ public class CityTest {
     }
 
     @Test
-    public void testLeastPopulatedHouse() {
+    void testLeastPopulatedHouse() {
         //given
         City city = new City();
         House house1 = new House("Mordor 1");
@@ -159,9 +159,8 @@ public class CityTest {
     }
 
 
-
     @Test
-    public void populatedHousesTest1() {
+    void populatedHousesTest1() {
         //given
         City city = new City();
         House house1 = new House("Mordor 1");
@@ -195,7 +194,7 @@ public class CityTest {
     }
 
     @Test
-    public void populatedHousesTest2() {
+    void populatedHousesTest2() {
         //given
         City city = new City();
         House house1 = new House("Anduin River 1");
@@ -238,7 +237,7 @@ public class CityTest {
     }
 
     @Test
-    public void allChildrenPopulated3() {
+    void allChildrenPopulated3() {
         //given
         City city = new City();
         House house1 = new House("Anduin River 1");
@@ -280,5 +279,49 @@ public class CityTest {
         assertEquals(1, house3.getInhabitants().size());
         assertEquals(1, house4.getInhabitants().size());
         assertEquals(0, house5.getInhabitants().size());
+    }
+
+    @Test
+    void allChildrenPopulated4() {
+        //given
+        City city = new City();
+        House house1 = new House("Anduin River 1");
+        House house2 = new House("Dead Marshes 2");
+        House house3 = new House("Edoras 3");
+        House house4 = new House("Mines of Moria 4");
+
+        city.addHouse(house1);
+        city.addHouse(house2);
+        city.addHouse(house3);
+        city.addHouse(house4);
+
+        Citizen arven = new Citizen("Arven", 295);
+        Citizen bilbo = new Citizen("Bilbo", 10);
+        Citizen legolas = new Citizen("Legolas", 100);
+        Citizen gendalf = new Citizen("Gendalf", 6);
+        Citizen frodo = new Citizen("Frodo", 3);
+        Citizen pippin = new Citizen("Pippin", 1);
+        Citizen aragorn = new Citizen("Aragorn", 45);
+
+        city.addCitizen(arven);
+        city.addCitizen(bilbo);
+        city.addCitizen(legolas);
+        city.addCitizen(gendalf);
+        city.addCitizen(frodo);
+        city.addCitizen(pippin);
+        city.addCitizen(aragorn);
+
+        //when
+        city.populateHouses();
+        int inhabitantsSum = city.getHouses().stream()
+                .map(house -> house.getInhabitants().size())
+                .mapToInt(Integer::intValue).sum();
+
+        //then
+        assertEquals(city.getCitizensCount(), inhabitantsSum);
+        assertEquals(3, house1.getInhabitants().size());
+        assertEquals(3, house2.getInhabitants().size());
+        assertEquals(1, house3.getInhabitants().size());
+        assertEquals(0, house4.getInhabitants().size());
     }
 }
