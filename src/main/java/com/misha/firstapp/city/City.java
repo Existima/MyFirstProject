@@ -24,21 +24,33 @@ public class City {
      * Make sure all children populated
      */
     public void populateHouses() {
-        Citizen child = null;
+
+        List<Citizen> childList = new LinkedList<>();
+        List<Citizen> adultList = new LinkedList<>();
+        List<Citizen> retireesList = new LinkedList<>();
         for (Citizen citizen : citizens) {
             if (citizen.getAge() < Group.CHILDREN.maxAge && citizen.getAge() > Group.CHILDREN.minAge) {
-                child = citizen;
+                childList.add(citizen);
+            } else if (citizen.getAge() < Group.ADULTS.maxAge && citizen.getAge() > Group.ADULTS.minAge) {
+                adultList.add(citizen);
             } else {
-                House childHouse = getLeastPopulatedHouse();
-                if (child != null) {
-                    childHouse.addInhabitant(child);
-                }
-                child = null;
-                childHouse.addInhabitant(citizen);
+                retireesList.add(citizen);
             }
-
         }
 
+        for (Citizen c : childList) {
+            House houseWithAdult = getLeastPopulatedHouse();
+            houseWithAdult.addInhabitant(c);
+            houseWithAdult.addInhabitant(adultList.remove(0));
+        }
+
+        for (Citizen a : adultList) {
+            getLeastPopulatedHouse().addInhabitant(a);
+        }
+
+        for (Citizen r : retireesList) {
+            getLeastPopulatedHouse().addInhabitant(r);
+        }
     }
 
     public void addHouse(House house) {
@@ -54,7 +66,6 @@ public class City {
     public Set<House> getHouses() {
         return new TreeSet<>(houses);
     }
-
 
     /**
      * This method must return first least populated house in the city, first means first in alphabetical order
@@ -79,7 +90,9 @@ public class City {
             }
         }
         return h;
-
+/**
+ * analogia
+ */
 //        return houses.stream().
 //                min((house1, house2) -> {
 //                    int newResult = house1.getInhabitants().size() - house2.getInhabitants().size();
@@ -155,8 +168,8 @@ public class City {
         ADULTS(18, 65),
         RETIREES(66, Integer.MAX_VALUE);
 
-        private final int minAge;
-        private final int maxAge;
+        public final int minAge;
+        public final int maxAge;
 
         Group(int minAge, int maxAge) {
             this.minAge = minAge;
